@@ -1,40 +1,40 @@
 #  File: TestCipher.py
 
-#  Description:
+#  Description: Given a plaintext we encode and decode accordingly to the encryption method
 
 #  Student's Name: Joonsung Ha
 
 #  Student's UT EID: jh69256
-
+ 
 #  Partner's Name: Laurence Wang
 
 #  Partner's UT EID: lnw653
 
-#  Course Name: CS 313E
+#  Course Name: CS 313E 
 
-#  Unique Number:
+#  Unique Number: 50305
 
-#  Date Created:
+#  Date Created: 2/6/20
 
-#  Date Last Modified:
+#  Date Last Modified: 2/7/20
 
-#  Input: strng is a string of characters and key is a positive
-#         integer 2 or greater and strictly less than the length
-#         of strng
-#  Output: function returns a single string that is encoded with
-#          rail fence algorithm
-def rail_fence_encode(strng, key):
+
+def rail_fence_encode ( strng, key ):
+
+    strng = str(strng)
+    key = int(key)
     lst = []
-    for row in range(3):
+    for row in range(key):
         re = []
         for col in range(len(strng)):
             re.append("-")
         lst.append(re)
+        
 
     row_index = 0
     col_index = 0
     length = len(strng)
-
+    
     while strng != "":
         for i in range(key):
             if col_index < length:
@@ -51,7 +51,7 @@ def rail_fence_encode(strng, key):
         else:
             break
 
-        for b in range(key - 2):
+        for b in range(key-2):
             if col_index < length:
                 row_index -= 1
                 col_index += 1
@@ -65,18 +65,75 @@ def rail_fence_encode(strng, key):
         else:
             break
 
-    return lst
+    encode_str = ""
+    for i in range(key):
+        for b in range(length):
+            if lst[i][b] != "-":
+                encode_str += lst[i][b]
 
 
-#  Input: strng is a string of characters and key is a positive
-#         integer 2 or greater and strictly less than the length
-#         of strng
-#  Output: function returns a single string that is decoded with
-#          rail fence algorithm
-def rail_fence_decode(strng, key):
-    # I have to recreate the list
 
-    return ""
+    return encode_str
+
+
+
+def rail_fence_decode ( strng, key ):
+
+  lst = []
+  strng = str(strng)
+  key = int(key)
+  for row in range(key):
+      re = []
+      for col in range(len(strng)):
+          re.append("-")
+      lst.append(re)
+
+
+  row = 0
+  col = 0
+  down = None
+
+  for y in range(len(strng)):
+      if row == 0:
+          down = True
+      elif row == key - 1:
+          down = False
+
+      lst[row][col] = "@"
+      col += 1
+
+      if down:
+          row+= 1
+      else:
+          row -= 1
+
+  index = 0
+
+  for x in range(key):
+      for y in range(len(strng)):
+          if lst[x][y] == "@" and index < len(strng):
+              lst[x][y] = strng[index]
+              index += 1
+
+  decode = ""
+  row = 0
+  col = 0
+
+  for y in range(len(strng)):
+      if row == 0:
+          down = True
+      elif row == key - 1:
+          down = False
+      if lst[row][col] != "@":
+          decode += lst[row][col]
+          col += 1
+
+      if down:
+          row += 1
+      else:
+          row -= 1
+
+  return decode
 
 
 #  Input: strng is a string of characters
@@ -142,6 +199,8 @@ def vigenere_decode(strng, phrase):
         s += decode_character(strng[x], phrase[x % len(phrase)] )
     return s
 def main():
+    print("Rail Fence Cipher")
+    print("")
     # prompt the user to enter plain text
     plain_text = input("Enter Plain Text to be Encoded: ")
 
@@ -149,12 +208,22 @@ def main():
     key = input("Enter Key: ")
 
     # encrypt and print the plain text using rail fence cipher
+    x = rail_fence_encode(plain_text,key)
+    print("Encoded Text:",x)
+    print("")
 
     # prompt the user to enter encoded text
+    encoded = input("Enter Encoded Text to be Decoded: ")
 
     # prompt the user to enter the key
+    key = input("Enter Key: ")
 
     # decrypt and print the encoded text using rail fence cipher
+    y = rail_fence_decode(encoded,key)
+    print("Decoded Plain Text:",y)
+    print("")
+    print("Vigenere Cipher")
+    print("")
 
     # prompt the user to enter plain text
     plain_text = input("Enter Plain Text to be Encoded: ")
@@ -167,6 +236,7 @@ def main():
     # encrypt and print the plain text using Vigenere cipher
     s = vigenere_encode(plain_text, key)
     print(s)
+    print("")
 
     # prompt the user to enter encoded text
     plain_text = input("Enter Encoded Text to be Decoded: ")
@@ -179,6 +249,7 @@ def main():
     # decrypt and print the encoded text using Vigenere cipher
     s = vigenere_decode(plain_text, key)
     print(s)
+    print("")
 
 
 # The line above main is for grading purposes only.
